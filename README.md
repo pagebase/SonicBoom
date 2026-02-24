@@ -177,7 +177,7 @@ pyinstaller --onefile --noconsole --name "SuperLoudMusic" --icon "my_icon.ico" -
 
 >[!NOTE]
 >### ⚠️ A Quick Note on Windows "Ghosting"
-Windows has a very stubborn "Icon Cache." Sometimes, after you compile the `.exe`, it might still look like the default blank application icon on _your_ computer.
-Don't panic! The icon is actually there. Windows is just loading an old, cached visual of the folder. To force Windows to show it:
+>Windows has a very stubborn "Icon Cache." Sometimes, after you compile the `.exe`, it might still look like the default blank application icon on _your_ computer.
+>Don't panic! The icon is actually there. Windows is just loading an old, cached visual of the folder. To force Windows to show it:
 >- Move the `.exe` file to your Desktop or a completely different folder.
 >- **Or**, just send it to your friend. Because their computer has never seen the file before, the custom icon will appear perfectly for them immediately.

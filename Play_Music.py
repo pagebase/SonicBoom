@@ -13,42 +13,40 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
-def force_max_volume():
-    """Interacts with Windows API to unmute and set volume to 100%"""
+def play_unstoppable_music():
+    """Plays music while actively fighting the user to keep volume at 100%"""
+    
+    # Initialize Windows COM libraries
+    comtypes.CoInitialize() 
+    
     try:
-        # Initialize the COM libraries for Windows API interaction
-        comtypes.CoInitialize() 
-        
-        # Get the primary speaker device
+        # Get the audio device and volume interface
         device = AudioUtilities.GetSpeakers()
-        
-        # Access the volume interface directly (new syntax)
         volume = device.EndpointVolume
         
-        # Unmute (0) and set scalar volume to 100% (1.0)
-        volume.SetMute(0, None) 
-        volume.SetMasterVolumeLevelScalar(1.0, None)
+        # Initialize the audio mixer and load the song
+        pygame.mixer.init()
+        music_file = resource_path("song.mp3") 
+        pygame.mixer.music.load(music_file)
         
+        # Start the music
+        pygame.mixer.music.play()
+        
+        # The Aggressive Loop: Keep running while the music is active
+        while pygame.mixer.music.get_busy():
+            # Constantly force unmute and 100% volume
+            volume.SetMute(0, None) 
+            volume.SetMasterVolumeLevelScalar(1.0, None)
+            
+            # Pause for just a fraction of a second before enforcing it again
+            # This makes the volume slider instantly snap back to 100 if dragged down
+            time.sleep(0.1) 
+            
     except Exception as e:
-        print(f"\n[!] Volume Error: {e}\n")
+        print(f"\n[!] Error: {e}\n")
     finally:
-        # Clean up COM libraries
+        # Clean up
         comtypes.CoUninitialize()
 
-def play_music():
-    force_max_volume()
-    
-    pygame.mixer.init()
-    music_file = resource_path("song.mp3") 
-    
-    try:
-        pygame.mixer.music.load(music_file)
-        pygame.mixer.music.play()
-        while pygame.mixer.music.get_busy():
-            time.sleep(1)
-    except Exception as e:
-        print(f"\n[!] Audio Playback Error: {e}\n")
-        input("Press Enter to exit...")
-
 if __name__ == '__main__':
-    play_music()
+    play_unstoppable_music()
